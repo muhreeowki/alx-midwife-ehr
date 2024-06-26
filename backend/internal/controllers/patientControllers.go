@@ -77,8 +77,8 @@ func DeletePatientController(c *gin.Context) {
 		return
 	}
 	// Delete the patient record from the database
-	tx := database.ENGINE.DeletePatient(id)
-	if err := tx.Error; err != nil {
+	err = database.ENGINE.DeletePatient(id)
+	if err != nil {
 		c.Error(err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

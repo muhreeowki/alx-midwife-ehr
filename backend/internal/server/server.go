@@ -3,11 +3,10 @@ package server
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/muhreeowki/midwifery-ehr/internal/controllers"
-	"github.com/muhreeowki/midwifery-ehr/internal/database"
 )
 
 /* SetupRouter configures the Gin router with the necessary routes and middleware and returns the configured router. */
-func SetupRouter(engine *database.DatabaseEngine) *gin.Engine {
+func SetupRouter() *gin.Engine {
 	// Set the router as the default one provided by Gin
 	r := gin.Default()
 
@@ -19,10 +18,10 @@ func SetupRouter(engine *database.DatabaseEngine) *gin.Engine {
 	})
 
 	// Setup patient CRUD endpoints
-	r.POST("/patient", controllers.CreatePatientController(engine))
-	r.GET("/patient/:id", controllers.GetPatientController(engine))
-	r.PATCH("/patient", controllers.UpdatePatientController(engine))
-	r.DELETE("/patient/:id", controllers.DeletePatientController(engine))
+	r.POST("/patient", controllers.CreatePatientController)
+	r.GET("/patient/:id", controllers.GetPatientController)
+	r.PATCH("/patient", controllers.UpdatePatientController)
+	r.DELETE("/patient/:id", controllers.DeletePatientController)
 
 	return r
 }

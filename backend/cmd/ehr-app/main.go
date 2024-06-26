@@ -10,7 +10,7 @@ import (
 )
 
 /* Init initializes the application */
-func Init() {
+func init() {
 	// Load environment variables
 	err := initializers.LoadEnvVariables()
 	if err != nil {
@@ -25,10 +25,8 @@ func Init() {
 }
 
 func main() {
-	// Initialize the application
-	Init()
 	// Start up the server
-	r := server.SetupRouter(database.ENGINE)
+	r := server.SetupRouter()
 	// Listen and serve
 	r.Run(fmt.Sprintf(":%s", os.Getenv("PORT")))
 }

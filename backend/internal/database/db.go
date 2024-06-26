@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/muhreeowki/midwifery-ehr/internal/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -34,12 +35,12 @@ func ConnectToDB() error {
 	// TODO: Consider moving the migration to a separate function
 	// ********** Migrate the schema **********
 	// Patients table
-	err = db.AutoMigrate(&Patient{})
+	err = db.AutoMigrate(&models.Patient{})
 	if err != nil {
 		return err
 	}
 	// Midwives table
-	err = db.AutoMigrate(&Midwife{})
+	err = db.AutoMigrate(&models.Midwife{})
 	if err != nil {
 		return err
 	}

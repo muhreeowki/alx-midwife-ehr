@@ -2,21 +2,21 @@ package database
 
 import (
 	"fmt"
-	"log"
 	"os"
 
-	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-func StartDB() (*gorm.DB, error) {
-	err := godotenv.Load("../../../.env")
-	if err != nil {
-		fmt.Println(err)
-		log.Fatal("Error loading .env file")
-	}
+type DatabaseEngine struct {
+	DB *gorm.DB
+}
 
+var ENGINE *DatabaseEngine
+
+/* ConnectToDB creates a connection to the database, migrates the schema and returns a gorm.DB object or an error if it fails. */
+func ConnectToDB() error {
+	// Connection string
 	dsn := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s sslmode=require",
 		os.Getenv("PGHOST"),
@@ -24,13 +24,24 @@ func StartDB() (*gorm.DB, error) {
 		os.Getenv("PGPASSWORD"),
 		os.Getenv("PGDATABASE"),
 	)
+
+	// Connect to the database
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	// Migrate the schema
-	db.AutoMigrate(&Patient{})
-	db.AutoMigrate(&Midwife{})
-	return db, err
+	// Migrate the schemas
+	err = db.AutoMigrate(&Patient{})
+	if err != nil {
+		return err
+	}
+	err = db.AutoMigrate(&Midwife{})
+	if err != nil {
+		return err
+	}
+
+	ENGINE = &DatabaseEngine{DB: db}
+
+	return nil
 }

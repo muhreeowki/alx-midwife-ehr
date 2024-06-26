@@ -8,36 +8,36 @@ import (
 
 type Midwife struct {
 	gorm.Model
-	Name         string `gorm:"not null"`
-	Email        string `gorm:"unique"`
-	PasswordHash string `gorm:"not null"`
+	Name         string `gorm:"not null;" binding:"required"`
+	Email        string `gorm:"not null;unique" validate:"email" binding:"required"`
+	PasswordHash string `gorm:"not null;" binding:"required"`
 	Patients     []Patient
 }
 
 type Patient struct {
 	gorm.Model
 	// Patient's personal details
-	FirstName   string
-	LastName    string
-	BirthDate   time.Time
-	Email       string
-	Phone       string
-	Address     string
-	PartnerName string
+	FirstName   string    `json:"first_name" gorm:"not null;" binding:"required"`
+	LastName    string    `json:"last_name" gorm:"not null;" binding:"required"`
+	BirthDate   time.Time `json:"birth_date"`
+	Email       string    `json:"email"`
+	Phone       string    `json:"phone"`
+	Address     string    `json:"address"`
+	PartnerName string    `json:"partner_name"`
 
 	// Patients' medical details
-	LMP            time.Time // Last Menstrual Period
-	ConceptionDate time.Time // Date of conception
-	SonoDate       time.Time // Date of sonogram
-	CRL            float64   // Crown Rump Length
-	CRLDate        time.Time // Date of CRL measurement
-	EDD            time.Time // Estimated Due Date
-	RhFactor       string    // Rh factor
+	LMP            time.Time `json:"lmp"`             // Last Menstrual Period
+	ConceptionDate time.Time `json:"conception_date"` // Date of conception
+	SonoDate       time.Time `json:"sono_date"`       // Date of sonogram
+	CRL            float64   `json:"crl"`             // Crown Rump Length
+	CRLDate        time.Time `json:"crl_date"`        // Date of CRL
+	EDD            time.Time `json:"edd"`             // Estimated Due Date
+	RhFactor       string    `json:"rh_factor"`       // Rh Factor
 
 	// Delivery details
-	Delivered    bool      // Has the patient delivered?
-	DeliveryDate time.Time // Date of delivery
+	Delivered    bool      `json:"delivered"`     // Has the patient delivered?
+	DeliveryDate time.Time `json:"delivery_date"` // Date of delivery
 
 	// Midwife details
-	MidwifeID uint32
+	MidwifeID uint32 `json:"midwife_id" gorm:"not null;" binding:"required"`
 }

@@ -6,7 +6,7 @@ import (
 
 func LoadEnvVariables() error {
 	// Load environment variables
-	err := godotenv.Load("../../../.env")
+	err := godotenv.Load("/Users/muh/Developer/projects/midwifery-ehr/.env")
 	if err != nil {
 		return err
 	}

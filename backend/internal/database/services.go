@@ -1,6 +1,8 @@
 package database
 
 import (
+	"fmt"
+
 	"gorm.io/gorm"
 )
 
@@ -11,6 +13,7 @@ func (engine *DatabaseEngine) CreatePatient(patientData *Patient) (patient Patie
 	if tx.Error != nil {
 		return patient, tx.Error
 	}
+	fmt.Println(patient)
 	return patient, nil
 }
 
@@ -33,6 +36,7 @@ func (engine *DatabaseEngine) UpdatePatient(patientData *Patient) (patient Patie
 	return patient, nil
 }
 
+/* DeletePatient deletes a patient record from the database using the patient's id. */
 func (engine *DatabaseEngine) DeletePatient(id string) (tx *gorm.DB) {
 	tx = engine.DB.Delete(&Patient{}, id)
 	return tx

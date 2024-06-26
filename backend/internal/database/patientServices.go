@@ -5,32 +5,21 @@ import (
 )
 
 /* CreatePatient creates a new patient record in the database. */
-func (engine *DatabaseEngine) CreatePatient(patientData *models.Patient) (patient models.Patient, err error) {
-	patient = *patientData
-	err = engine.DB.Create(patientData).Error
-	if err != nil {
-		return patient, err
-	}
-	return patient, nil
+func (engine *DatabaseEngine) CreatePatient(patient *models.Patient) (err error) {
+	err = engine.DB.Create(patient).Error
+	return err
 }
 
 /* GetPatient retrieves a patient record from the database using the patient's id. */
 func (engine *DatabaseEngine) GetPatient(id string) (patient models.Patient, err error) {
 	err = engine.DB.First(&patient, id).Error
-	if err != nil {
-		return patient, err
-	}
-	return patient, nil
+	return patient, err
 }
 
 /* UpdatePatient updates a patient record in the database. */
-func (engine *DatabaseEngine) UpdatePatient(patientData *models.Patient) (patient models.Patient, err error) {
-	patient = *patientData
+func (engine *DatabaseEngine) UpdatePatient(patient *models.Patient) (err error) {
 	err = engine.DB.Save(patient).Error
-	if err != nil {
-		return patient, err
-	}
-	return patient, nil
+	return err
 }
 
 /* DeletePatient deletes a patient record from the database using the patient's id. */

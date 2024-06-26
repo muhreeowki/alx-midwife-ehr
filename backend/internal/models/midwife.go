@@ -6,8 +6,8 @@ import (
 
 type Midwife struct {
 	gorm.Model
-	Name         string `json:"name" gorm:"not null;" binding:"required"`
-	Email        string `json:"email" gorm:"not null;unique" validate:"email" binding:"required"`
-	PasswordHash string `json:"password" gorm:"not null;" binding:"required"`
-	Patients     []Patient
+	Name     string `json:"name" gorm:"not null;" binding:"required"`
+	Email    string `json:"email" gorm:"not null;unique" validate:"email" binding:"required"`
+	Password string `json:"password" gorm:"not null;" binding:"required"`
+	Patients []Patient
 }

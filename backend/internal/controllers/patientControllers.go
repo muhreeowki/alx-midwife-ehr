@@ -19,7 +19,7 @@ func CreatePatientController(c *gin.Context) {
 		return
 	}
 	// Create the patient record in the database
-	_, err := database.ENGINE.CreatePatient(&patient)
+	err := database.ENGINE.CreatePatient(&patient)
 	if err != nil {
 		c.Error(err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -59,7 +59,7 @@ func UpdatePatientController(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
 		return
 	}
-	_, err := database.ENGINE.UpdatePatient(&patient)
+	err := database.ENGINE.UpdatePatient(&patient)
 	if err != nil {
 		c.Error(err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

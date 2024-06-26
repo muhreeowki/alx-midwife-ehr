@@ -23,5 +23,8 @@ func SetupRouter() *gin.Engine {
 	r.PATCH("/patient", controllers.UpdatePatientController)
 	r.DELETE("/patient/:id", controllers.DeletePatientController)
 
+	// Setup midwife CRUD endpoints
+	r.POST("/midwife", controllers.CreateMidwifeController)
+
 	return r
 }

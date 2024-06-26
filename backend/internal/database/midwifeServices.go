@@ -3,11 +3,7 @@ package database
 import "github.com/muhreeowki/midwifery-ehr/internal/models"
 
 /* CreateMidwife creates a new midwife record in the database. */
-func (engine *DatabaseEngine) CreateMidwife(midwifeData *models.Midwife) (midwife models.Midwife, err error) {
-	midwife = *midwifeData
+func (engine *DatabaseEngine) CreateMidwife(midwife *models.Midwife) (err error) {
 	err = engine.DB.Create(midwife).Error
-	if err != nil {
-		return midwife, err
-	}
-	return midwife, nil
+	return err
 }

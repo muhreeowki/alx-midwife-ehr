@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/muhreeowki/midwifery-ehr/internal/controllers"
 	"github.com/muhreeowki/midwifery-ehr/internal/database"
 )
 
@@ -17,7 +18,8 @@ func SetupRouter(engine *database.DatabaseEngine) *gin.Engine {
 	})
 
 	// Setup patient routes
-	r.POST("/patient", CreatePatientController(engine))
+	r.POST("/patient", controllers.CreatePatientController(engine))
+	r.GET("/patient/:id", controllers.GetPatientController(engine))
 
 	return r
 }

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/muhreeowki/midwifery-ehr/internal/database"
@@ -14,14 +15,14 @@ func CreatePatientController(engine *database.DatabaseEngine) func(*gin.Context)
 		var patient database.Patient
 		if err := c.ShouldBindJSON(&patient); err != nil {
 			c.Error(err)
-			c.AbortWithStatus(http.StatusBadRequest)
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 		// Create the patient record in the database
-		tx := engine.CreatePatient(&patient)
-		if err := tx.Error; err != nil {
+		_, err := engine.CreatePatient(&patient)
+		if err != nil {
 			c.Error(err)
-			c.AbortWithStatus(http.StatusInternalServerError)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 		// Return the created patient record in the response
@@ -34,11 +35,16 @@ func GetPatientController(engine *database.DatabaseEngine) func(*gin.Context) {
 	return func(c *gin.Context) {
 		// Get the patient ID from the URL
 		id := c.Param("id")
+		numId, err := strconv.Atoi(id)
+		if err != nil || numId < 1 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid patient id"})
+			return
+		}
 		// Get the patient record from the database
 		patient, err := engine.GetPatient(id)
 		if err != nil {
 			c.Error(err)
-			c.AbortWithStatus(http.StatusNotFound)
+			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
 		// Return the patient record in the response
@@ -51,16 +57,39 @@ func UpdatePatientController(engine *database.DatabaseEngine) func(*gin.Context)
 	return func(c *gin.Context) {
 		var patient database.Patient
 		if err := c.ShouldBindJSON(&patient); err != nil || patient.ID == 0 {
-			c.Error(err)
-			c.AbortWithStatus(http.StatusBadRequest)
+			if err != nil {
+				c.Error(err)
+			}
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
 			return
 		}
-		tx := engine.UpdatePatient(&patient)
-		if err := tx.Error; err != nil {
+		_, err := engine.UpdatePatient(&patient)
+		if err != nil {
 			c.Error(err)
-			c.AbortWithStatus(http.StatusInternalServerError)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 		c.JSON(http.StatusOK, gin.H{"data": patient})
+	}
+}
+
+func DeletePatientController(engine *database.DatabaseEngine) func(*gin.Context) {
+	return func(c *gin.Context) {
+		// Get the patient ID from the URL
+		id := c.Param("id")
+		numId, err := strconv.Atoi(id)
+		if err != nil || numId < 1 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid patient id"})
+			return
+		}
+		// Delete the patient record from the database
+		tx := engine.DeletePatient(id)
+		if err := tx.Error; err != nil {
+			c.Error(err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		// Return a success message in the response
+		c.JSON(http.StatusOK, gin.H{"message": "Patient deleted successfully"})
 	}
 }

@@ -20,6 +20,7 @@ func SetupRouter(engine *database.DatabaseEngine) *gin.Engine {
 	// Setup patient routes
 	r.POST("/patient", controllers.CreatePatientController(engine))
 	r.GET("/patient/:id", controllers.GetPatientController(engine))
+	r.PATCH("/patient", controllers.UpdatePatientController(engine))
 
 	return r
 }

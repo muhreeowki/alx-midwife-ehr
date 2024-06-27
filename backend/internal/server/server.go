@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/muhreeowki/midwifery-ehr/internal/auth"
 	"github.com/muhreeowki/midwifery-ehr/internal/controllers"
 )
 
@@ -25,7 +26,8 @@ func SetupRouter() *gin.Engine {
 
 	// Setup midwife CRUD endpoints
 	r.POST("/midwife", controllers.CreateMidwifeController)
-	r.POST("/login", controllers.LoginController)
+	r.POST("/login", auth.LoginController)
+	r.GET("/midwife", auth.CheckAuth, auth.GetUserProfile)
 
 	return r
 }

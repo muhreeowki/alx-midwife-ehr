@@ -9,9 +9,9 @@ func (engine *DatabaseEngine) CreateMidwife(midwife *models.Midwife) (err error)
 }
 
 /* GetMidwife retrieves a midwife record from the database. */
-func (engine *DatabaseEngine) GetMidwife(midwife *models.Midwife) (err error) {
-	err = engine.DB.First(midwife, midwife.ID).Error
-	return err
+func (engine *DatabaseEngine) GetMidwife(id float64) (midwife models.Midwife, err error) {
+	err = engine.DB.Where("ID = ?", id).First(&midwife).Error
+	return midwife, err
 }
 
 // TODO: Implement Authorization middleware, then create GetMidwife, UpdateMidwife, and DeleteMidwife functions.

@@ -1,4 +1,4 @@
-package controllers
+package auth
 
 import (
 	"net/http"
@@ -12,6 +12,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+/* LoginController is a Gin controller that handles the login endpoint for midwives. */
 func LoginController(c *gin.Context) {
 	// Parse the request body into a Login struct
 	var loginInput models.AuthMidwifeInput
@@ -49,4 +50,14 @@ func LoginController(c *gin.Context) {
 
 	// Return the user record in the response
 	c.JSON(http.StatusOK, gin.H{"token": token})
+}
+
+/* GetUserProfile is a Gin controller that returns the user profile of the currently authenticated midwife. */
+func GetUserProfile(c *gin.Context) {
+	midwife, ok := c.Get("currentMidwife")
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "no user with that email and password was found"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"midwife": midwife})
 }

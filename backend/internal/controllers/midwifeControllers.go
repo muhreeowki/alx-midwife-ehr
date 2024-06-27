@@ -35,7 +35,7 @@ func CreateMidwifeController(c *gin.Context) {
 	}
 	midwife.Password = string(passwordHash)
 
-	// Create the patient record in the database
+	// Create the midwife record in the database
 	err = database.ENGINE.CreateMidwife(&midwife)
 	if err != nil {
 		c.Error(err)

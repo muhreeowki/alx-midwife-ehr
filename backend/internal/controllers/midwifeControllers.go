@@ -22,7 +22,6 @@ func CreateMidwifeController(c *gin.Context) {
 	// Check if the midwife already exists in the database
 	var midwifeFound models.Midwife
 	database.ENGINE.DB.Where("email=?", midwife.Email).Find(&midwifeFound)
-
 	if midwifeFound.ID != 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "email already in use"})
 		return
@@ -43,6 +42,7 @@ func CreateMidwifeController(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
 	// Return the created patient record in the response
 	c.JSON(http.StatusCreated, gin.H{"data": midwife})
 }

@@ -25,6 +25,7 @@ func SetupRouter() *gin.Engine {
 
 	// Setup midwife CRUD endpoints
 	r.POST("/midwife", controllers.CreateMidwifeController)
+	r.POST("/login", controllers.LoginController)
 
 	return r
 }

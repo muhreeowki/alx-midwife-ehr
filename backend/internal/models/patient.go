@@ -1,7 +1,7 @@
 package models
 
 import (
-	"time"
+	"database/sql"
 
 	"gorm.io/gorm"
 )
@@ -9,27 +9,27 @@ import (
 type Patient struct {
 	gorm.Model
 	// Patient's personal details
-	FirstName   string    `json:"first_name" gorm:"not null;" binding:"required"`
-	LastName    string    `json:"last_name" gorm:"not null;" binding:"required"`
-	BirthDate   time.Time `json:"birth_date"`
-	Email       string    `json:"email"`
-	Phone       string    `json:"phone"`
-	Address     string    `json:"address"`
-	PartnerName string    `json:"partner_name"`
+	FirstName   string         `json:"first_name" gorm:"not null;"`
+	LastName    string         `json:"last_name" gorm:"not null;"`
+	BirthDate   sql.NullTime   `json:"birth_date"`
+	Email       sql.NullString `json:"email"`
+	Phone       sql.NullString `json:"phone"`
+	Address     sql.NullString `json:"address"`
+	PartnerName sql.NullString `json:"partner_name"`
 
 	// Patients' medical details
-	LMP            time.Time `json:"lmp"`             // Last Menstrual Period
-	ConceptionDate time.Time `json:"conception_date"` // Date of conception
-	SonoDate       time.Time `json:"sono_date"`       // Date of sonogram
-	CRL            float64   `json:"crl"`             // Crown Rump Length
-	CRLDate        time.Time `json:"crl_date"`        // Date of CRL
-	EDD            time.Time `json:"edd"`             // Estimated Due Date
-	RhFactor       string    `json:"rh_factor"`       // Rh Factor
+	LMP            sql.NullTime    `json:"lmp"`             // Last Menstrual Period
+	ConceptionDate sql.NullTime    `json:"conception_date"` // Date of conception
+	SonoDate       sql.NullTime    `json:"sono_date"`       // Date of sonogram
+	CRL            sql.NullFloat64 `json:"crl"`             // Crown Rump Length
+	CRLDate        sql.NullTime    `json:"crl_date"`        // Date of CRL
+	EDD            sql.NullTime    `json:"edd"`             // Estimated Due Date
+	RhFactor       sql.NullString  `json:"rh_factor"`       // Rh Factor
 
 	// Delivery details
-	Delivered    bool      `json:"delivered"`     // Has the patient delivered?
-	DeliveryDate time.Time `json:"delivery_date"` // Date of delivery
+	Delivered    bool         `json:"delivered" gorm:"default:false"` // Has the patient delivered
+	DeliveryDate sql.NullTime `json:"delivery_date"`                  // Date of delivery
 
 	// Midwife details
-	MidwifeID uint32 `json:"midwife_id" gorm:"not null;" binding:"required"`
+	MidwifeID uint32 `json:"midwife_id" gorm:"not null;"`
 }

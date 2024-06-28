@@ -16,9 +16,10 @@ func (engine *DatabaseEngine) GetPatient(id string) (patient models.Patient, err
 	return patient, err
 }
 
+// TODO: patient object prepopulates all fields, even if they are not provided in the request body. find a way to only update fields that are provided in the request body
 /* UpdatePatient updates a patient record in the database. */
 func (engine *DatabaseEngine) UpdatePatient(patient *models.Patient) (err error) {
-	err = engine.DB.Save(patient).Error
+	err = engine.DB.Model(patient).Updates(patient).Error
 	return err
 }
 

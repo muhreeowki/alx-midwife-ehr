@@ -16,6 +16,7 @@ type Patient struct {
 	Phone       sql.NullString `json:"phone"`
 	Address     sql.NullString `json:"address"`
 	PartnerName sql.NullString `json:"partner_name"`
+	ImageURL    sql.NullString `json:"image_url"`
 
 	// Patients' medical details
 	LMP            sql.NullTime    `json:"lmp"`             // Last Menstrual Period

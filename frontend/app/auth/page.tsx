@@ -8,13 +8,14 @@ import { useForm } from "react-hook-form";
 import { SignUpSchema, LoginSchema } from "@/lib/zodSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import SignUpForm from "./SignUpForm";
+import LoginForm from "./LoginForm";
 
-const LoginForm = () => {
-  const [signUpOrLogin, setSignUpOrLogin] = React.useState<"signUp" | "login">(
-    "signUp"
-  );
+const AuthForm = () => {
+  const [authType, setAuthType] = React.useState<"signUp" | "login">("signUp");
+
   type SignUpInputs = z.infer<typeof SignUpSchema>;
   type LoginInputs = z.infer<typeof LoginSchema>;
+
   const signUpForm = useForm<SignUpInputs>({
     resolver: zodResolver(SignUpSchema),
     defaultValues: {
@@ -24,6 +25,7 @@ const LoginForm = () => {
       password: "",
     },
   });
+
   const loginForm = useForm<LoginInputs>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -34,9 +36,13 @@ const LoginForm = () => {
 
   return (
     <main className="flex items-center justify-center h-screen">
-      <SignUpForm form={signUpForm} setSignUpOrLogin={setSignUpOrLogin} />
+      {authType === "signUp" ? (
+        <SignUpForm form={signUpForm} setAuthType={setAuthType} />
+      ) : (
+        <LoginForm form={loginForm} setAuthType={setAuthType} />
+      )}
     </main>
   );
 };
 
-export default LoginForm;
+export default AuthForm;

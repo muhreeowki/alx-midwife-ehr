@@ -1,8 +1,5 @@
 "use server";
 
-import z from "zod";
-import { SignUpSchema } from "@/lib/zodSchema";
-
 import axios from "axios";
 import { redirect } from "next/navigation";
 
@@ -21,4 +18,13 @@ export async function SignUp(data: {
       redirect("/");
     }
   }
+}
+
+export async function Login(data: { email: string; password: string }) {
+  const url = `${process.env.BACKEND_URL}/api/auth/login`;
+  const res = await axios.post(url, data);
+  if (res.status === 200) {
+    return res.data;
+  }
+  return undefined;
 }

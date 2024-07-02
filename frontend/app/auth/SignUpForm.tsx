@@ -25,7 +25,7 @@ import {
 import { UseFormReturn } from "react-hook-form";
 import z from "zod";
 import { SignUpSchema } from "@/lib/zodSchema";
-import { onSignUpSubmit } from "@/app/actions";
+import { SignUp } from "@/app/actions";
 
 const SignUpForm = ({
   form,
@@ -43,18 +43,20 @@ const SignUpForm = ({
   >;
   setSignUpOrLogin: React.Dispatch<React.SetStateAction<"signUp" | "login">>;
 }) => {
+  const handleSubmit = async (data: z.infer<typeof SignUpSchema>) => {
+    const res = await SignUp({
+      email: data.email,
+      password: data.password,
+      first_name: data.first_name,
+      last_name: data.last_name,
+    });
+  };
+
   return (
     <Form {...form}>
       <form
         action="#"
-        onSubmit={form.handleSubmit((data: z.infer<typeof SignUpSchema>) =>
-          onSignUpSubmit({
-            email: data.email,
-            password: data.password,
-            first_name: data.first_name,
-            last_name: data.last_name,
-          })
-        )}
+        onSubmit={form.handleSubmit(handleSubmit)}
         className="space-y-8"
       >
         <Card className="mx-auto max-w-sm">

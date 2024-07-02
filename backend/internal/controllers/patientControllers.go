@@ -34,7 +34,7 @@ func CreatePatientController(c *gin.Context) {
 		return
 	}
 	// Return the created patient record in the response
-	c.JSON(http.StatusCreated, gin.H{"data": patient})
+	c.JSON(http.StatusCreated, gin.H{"patient": patient})
 }
 
 /* GetPatientController returns a gin.HandlerFunc that parses a patient ID from the URL and calls the GetPatient method on the database engine to retrieve the patient record. */
@@ -61,7 +61,7 @@ func GetPatientController(c *gin.Context) {
 		return
 	}
 	// Return the patient record in the response
-	c.JSON(http.StatusOK, gin.H{"data": patient})
+	c.JSON(http.StatusOK, gin.H{"patient": patient})
 }
 
 /* UpdatePatientController returns a gin.HandlerFunc that parses a patient record from the request body and calls the UpdatePatient method on the database engine to update the patient record. */
@@ -105,7 +105,7 @@ func UpdatePatientController(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": patient})
+	c.JSON(http.StatusOK, gin.H{"patient": patient})
 }
 
 func DeletePatientController(c *gin.Context) {

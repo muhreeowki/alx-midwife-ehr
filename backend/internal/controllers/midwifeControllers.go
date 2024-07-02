@@ -43,8 +43,14 @@ func MidwifeSignupController(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	midwifeData := models.AuthMidwifeOutput{
+		ID:        midwife.ID,
+		Email:     midwife.Email,
+		FirstName: midwife.FirstName,
+		LastName:  midwife.LastName,
+	}
 	// Return the created patient record in the response
-	c.JSON(http.StatusCreated, gin.H{"data": midwife})
+	c.JSON(http.StatusCreated, gin.H{"midwife": midwifeData})
 }
 
 /* MidwifeLoginController is a Gin controller that handles the login endpoint for midwives. */
@@ -104,9 +110,10 @@ func MidwifePatientsController(c *gin.Context) {
 	}
 	// Convert the midwifeData to a Midwife struct
 	midwife := models.Midwife{
-		Model: gorm.Model{ID: midwifeData.(models.AuthMidwifeOutput).ID},
-		Name:  midwifeData.(models.AuthMidwifeOutput).Name,
-		Email: midwifeData.(models.AuthMidwifeOutput).Email,
+		Model:     gorm.Model{ID: midwifeData.(models.AuthMidwifeOutput).ID},
+		FirstName: midwifeData.(models.AuthMidwifeOutput).FirstName,
+		LastName:  midwifeData.(models.AuthMidwifeOutput).LastName,
+		Email:     midwifeData.(models.AuthMidwifeOutput).Email,
 	}
 	// Get all patients associated with the midwife
 	patients, err := database.ENGINE.GetMidwifePatients(midwife)

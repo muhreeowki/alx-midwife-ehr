@@ -19,16 +19,16 @@ func SetupRouter() *gin.Engine {
 	})
 
 	// Setup patient CRUD endpoints
-	r.POST("/patient", auth.CheckAuth, controllers.CreatePatientController)
-	r.GET("/patient/:id", auth.CheckAuth, controllers.GetPatientController)
-	r.PATCH("/patient", auth.CheckAuth, controllers.UpdatePatientController)
-	r.DELETE("/patient/:id", auth.CheckAuth, controllers.DeletePatientController)
+	r.POST("/api/patient", auth.CheckAuth, controllers.CreatePatientController)
+	r.GET("/api/patient/:id", auth.CheckAuth, controllers.GetPatientController)
+	r.PATCH("/api/patient", auth.CheckAuth, controllers.UpdatePatientController)
+	r.DELETE("/api/patient/:id", auth.CheckAuth, controllers.DeletePatientController)
 
 	// Setup midwife CRUD endpoints
-	r.POST("/signup", controllers.MidwifeSignupController)
-	r.POST("/login", controllers.MidwifeLoginController)
-	r.GET("/profile", auth.CheckAuth, controllers.MidwifeProfileController)
-	r.GET("/mypatients", auth.CheckAuth, controllers.MidwifePatientsController)
+	r.POST("/api/auth/signup", controllers.MidwifeSignupController)
+	r.POST("/api/auth/login", controllers.MidwifeLoginController)
+	r.GET("/api/auth/profile", auth.CheckAuth, controllers.MidwifeProfileController)
+	r.GET("api/mypatients", auth.CheckAuth, controllers.MidwifePatientsController)
 
 	return r
 }

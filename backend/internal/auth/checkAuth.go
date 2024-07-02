@@ -68,9 +68,10 @@ func CheckAuth(c *gin.Context) {
 	}
 	// Set the midwife in the context
 	c.Set("currentMidwife", models.AuthMidwifeOutput{
-		ID:    midwife.ID,
-		Email: midwife.Email,
-		Name:  midwife.Name,
+		ID:        midwife.ID,
+		Email:     midwife.Email,
+		FirstName: midwife.FirstName,
+		LastName:  midwife.LastName,
 	})
 	c.Next()
 }

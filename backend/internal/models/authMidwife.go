@@ -6,7 +6,8 @@ type AuthMidwifeInput struct {
 }
 
 type AuthMidwifeOutput struct {
-	ID    uint   `json:"id"`
-	Email string `json:"email"`
-	Name  string `json:"name"`
+	ID        uint   `json:"id"`
+	Email     string `json:"email"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
 }

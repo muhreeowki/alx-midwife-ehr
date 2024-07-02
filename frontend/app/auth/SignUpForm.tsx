@@ -25,7 +25,7 @@ import {
 import { UseFormReturn } from "react-hook-form";
 import z from "zod";
 import { SignUpSchema } from "@/lib/zodSchema";
-import { SignUp } from "@/app/actions";
+import { SignUp } from "@/app/serverActions";
 
 const SignUpForm = ({
   form,

@@ -28,3 +28,14 @@ export async function Login(data: { email: string; password: string }) {
   }
   return undefined;
 }
+
+export async function GetProfile(token: string) {
+  const url = `${process.env.BACKEND_URL}/api/auth/profile`;
+  const res = await axios.get(url, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (res.status === 200) {
+    return res.data.midwife;
+  }
+  return undefined;
+}

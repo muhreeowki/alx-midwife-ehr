@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import * as React from "react";
 
@@ -23,12 +25,14 @@ import {
 } from "@/components/ui/form";
 
 import { UseFormReturn } from "react-hook-form";
-import z from "zod";
-import { LoginSchema } from "@/lib/zodSchema";
-import { Login } from "@/app/actions";
+
+import { GetProfile, Login } from "@/app/serverActions";
 
 import useAuthContext from "@/hooks/useAuthContext";
 import { User } from "@/context/authContext";
+import z from "zod";
+import { LoginSchema } from "@/lib/zodSchema";
+import { useRouter } from "next/navigation";
 
 const LoginForm = ({
   form,
@@ -44,22 +48,48 @@ const LoginForm = ({
   >;
   setAuthType: React.Dispatch<React.SetStateAction<"signUp" | "login">>;
 }) => {
-  const handleSubmit = async (data: z.infer<typeof LoginSchema>) => {
-    let res: { token: string } = await Login({
-      email: data.email,
-      password: data.password,
-    });
-    const token: string = res.token;
-    // Get use info
+  const { login } = useAuthContext();
+  const router = useRouter();
 
-    console.log(res.token);
+  const handleLoginSubmit = async (data: z.infer<typeof LoginSchema>) => {
+    try {
+      // Login user
+      let loginRes: { token: string } = await Login({
+        email: data.email,
+        password: data.password,
+      });
+      const token: string = loginRes.token;
+      console.log(token);
+
+      // Get use info
+      const profileRes: {
+        id: string;
+        email: string;
+        first_name: string;
+        last_name: string;
+        token: string;
+      } = await GetProfile(token);
+
+      // Store user info in context
+      const userData: User = {
+        id: profileRes.id,
+        email: profileRes.email,
+        firstName: profileRes.first_name,
+        lastName: profileRes.last_name,
+        token: profileRes.token,
+      };
+      login(userData);
+
+      // Redirect to dashboard
+      router.push("/");
+    } catch (error) {}
   };
 
   return (
     <Form {...form}>
       <form
         action="#"
-        onSubmit={form.handleSubmit(handleSubmit)}
+        onSubmit={form.handleSubmit(handleLoginSubmit)}
         className="space-y-8"
       >
         <Card className="mx-auto max-w-sm">

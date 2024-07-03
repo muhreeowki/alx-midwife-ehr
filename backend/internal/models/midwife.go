@@ -6,10 +6,10 @@ import (
 
 type Midwife struct {
 	gorm.Model
-	FirstName string `json:"first_name" gorm:"not null;" binding:"required"`
-	LastName  string `json:"last_name" gorm:"not null;" binding:"required"`
+	FirstName string `json:"firstName" gorm:"not null;" binding:"required"`
+	LastName  string `json:"lastName" gorm:"not null;" binding:"required"`
 	Email     string `json:"email" gorm:"not null;unique" validate:"email" binding:"required"`
 	Password  string `json:"password" gorm:"not null;" binding:"required"`
-	ImageURL  string `json:"profile_image"`
+	ImageURL  string `json:"profileImage"`
 	Patients  []Patient
 }

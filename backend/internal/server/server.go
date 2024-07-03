@@ -28,7 +28,7 @@ func SetupRouter() *gin.Engine {
 	r.POST("/api/auth/signup", controllers.MidwifeSignupController)
 	r.POST("/api/auth/login", controllers.MidwifeLoginController)
 	r.GET("/api/auth/profile", auth.CheckAuth, controllers.MidwifeProfileController)
-	r.GET("api/mypatients", auth.CheckAuth, controllers.MidwifePatientsController)
+	r.GET("api/patients", auth.CheckAuth, controllers.MidwifePatientsController)
 
 	return r
 }

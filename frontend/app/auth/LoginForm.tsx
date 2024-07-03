@@ -54,13 +54,14 @@ const LoginForm = ({
   const handleLoginSubmit = async (data: z.infer<typeof LoginSchema>) => {
     try {
       // Login user
-      let loginRes: { token: string } = await Login({
+      const token: string | undefined = await Login({
         email: data.email,
         password: data.password,
       });
-      const token: string = loginRes.token;
-      console.log(token);
-
+      if (!token) {
+        console.error("Login failed");
+        return;
+      }
       // Get use info
       const profileRes: {
         id: string;
@@ -69,17 +70,15 @@ const LoginForm = ({
         last_name: string;
         token: string;
       } = await GetProfile(token);
-
       // Store user info in context
       const userData: User = {
         id: profileRes.id,
         email: profileRes.email,
         firstName: profileRes.first_name,
         lastName: profileRes.last_name,
-        token: profileRes.token,
+        token,
       };
       login(userData);
-
       // Redirect to dashboard
       router.push("/");
     } catch (error) {}

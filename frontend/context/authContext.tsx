@@ -1,13 +1,13 @@
 "use client";
 import * as React from "react";
 
-export interface User {
+export type User = {
   id: string;
   firstName: string;
   lastName: string;
   token: string;
   email: string;
-}
+};
 
 export interface AuthContextProps {
   user: User | null;

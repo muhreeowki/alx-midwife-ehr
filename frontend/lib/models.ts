@@ -7,33 +7,62 @@ export type Midwife = {
 };
 
 export type Patient = {
+  // Admin data
   id: number;
   createdAt: string;
   updatedAt: string;
-  deletedAt: string | null;
+  deletedAt: string;
 
   // Patient's personal details
   firstName: string;
   lastName: string;
-  birthDate: string | null;
-  email: string | null;
-  phone: string | null;
-  address: string | null;
-  partnerName: string | null;
-  imageURL: string | null;
+  birthDate: string;
+  email: string;
+  phone: string;
+  address: string;
+  partnerName: string;
+  imageURL: string;
 
   // Patients' medical details
-  lmp: string | null; // Last Menstrual Period
-  conceptionDate: string | null; // Date of conception
-  sonoDate: string | null; // Date of sonogram
-  crl: number | null; // Crown Rump Length
-  crlDate: string | null; // Date of CRL
-  edd: string | null; // Estimated Due Date
-  rhFactor: string | null; // Rh Factor
+  lmp: string; // Last Menstrual Period
+  conceptionDate: string; // Date of conception
+  sonoDate: string; // Date of sonogram
+  crl: number; // Crown Rump Length
+  crlDate: string; // Date of CRL
+  edd: string; // Estimated Due Date
+  rhFactor: string; // Rh Factor
 
   // Delivery details
   delivered: boolean; // Has the patient delivered
-  deliveryDate: string | null; // Date of delivery
+  deliveryDate: string; // Date of delivery
+
+  // Midwife details
+  midwifeId: number;
+};
+
+export type CreatePatientInput = {
+  // Patient's personal details
+  firstName: string;
+  lastName: string;
+  birthDate: string;
+  email: string;
+  phone: string;
+  address: string;
+  partnerName: string;
+  imageURL: string;
+
+  // Patients' medical details
+  lmp: string; // Last Menstrual Period
+  conceptionDate: string; // Date of conception
+  sonoDate: string; // Date of sonogram
+  crl: number; // Crown Rump Length
+  crlDate: string; // Date of CRL
+  edd: string; // Estimated Due Date
+  rhFactor: string; // Rh Factor
+
+  // Delivery details
+  delivered: boolean; // Has the patient delivered
+  deliveryDate: string; // Date of delivery
 
   // Midwife details
   midwifeId: number;

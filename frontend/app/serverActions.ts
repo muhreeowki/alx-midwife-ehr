@@ -4,6 +4,7 @@ import {
   AuthMidwifeLoginInput,
   AuthMidwifeOutput,
   AuthMidwifeSignUpInput,
+  CreatePatientInput,
   Midwife,
   Patient,
 } from "@/lib/models";
@@ -72,4 +73,27 @@ export async function getPatients(token: string): Promise<Patient[]> {
   }
   const patients: Patient[] = await res.data.patients;
   return patients;
+}
+
+export async function createPatient(
+  patient: CreatePatientInput
+): Promise<Patient> {
+  const midwifeData = cookies().get("profileData")?.value;
+  if (!midwifeData) {
+    throw new Error("Failed to get midwife data");
+  }
+  const midwife = JSON.parse(midwifeData);
+  const token = cookies().get("token")?.value;
+  if (!token) {
+    throw new Error("Failed to get token");
+  }
+  patient.midwifeId = midwife.id;
+  const url = `${process.env.BACKEND_URL}/api/patient`;
+  const res = await axios.post(url, patient, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (res.status !== 201) {
+    throw new Error(res.data.error);
+  }
+  return res.data.patient;
 }

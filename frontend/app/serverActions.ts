@@ -75,9 +75,7 @@ export async function getPatients(token: string): Promise<Patient[]> {
   return patients;
 }
 
-export async function createPatient(
-  patient: CreatePatientInput
-): Promise<Patient> {
+export async function createPatient(patient: CreatePatientInput) {
   const midwifeData = cookies().get("profileData")?.value;
   if (!midwifeData) {
     throw new Error("Failed to get midwife data");
@@ -95,5 +93,5 @@ export async function createPatient(
   if (res.status !== 201) {
     throw new Error(res.data.error);
   }
-  return res.data.patient;
+  redirect("/dashboard");
 }

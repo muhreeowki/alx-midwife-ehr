@@ -14,26 +14,25 @@ const CreatePatientPage = () => {
     defaultValues: {
       firstName: "",
       lastName: "",
-      birthDate: "",
+      birthDate: "2022-01-12T00:00:00.000Z",
       email: "",
       phone: "",
       address: "",
       partnerName: "",
       imageURL: "",
-      lmp: "",
-      conceptionDate: "",
-      sonoDate: "",
-      crl: 0,
-      crlDate: "",
-      edd: "",
-      rhFactor: "",
+      lmp: "2022-01-12T00:00:00.000Z",
+      conceptionDate: "2022-01-12T00:00:00.000Z",
+      sonoDate: "2022-01-12T00:00:00.000Z",
+      crl: 15,
+      crlDate: "2022-01-12T00:00:00.000Z",
+      edd: "2022-01-12T00:00:00.000Z",
+      rhFactor: "2022-01-12T00:00:00.000Z",
       delivered: false,
-      deliveryDate: "",
+      deliveryDate: "2022-01-12T00:00:00.000Z",
       midwifeId: 0,
     },
   });
 
-  
   return <CreatePatientForm form={form} />;
 };
 

@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -83,6 +81,7 @@ import { CreatePatientInput } from "@/lib/models";
 import { UseFormReturn } from "react-hook-form";
 import { createPatient } from "@/app/serverActions";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export default function CreatePatientForm({
   form,
@@ -91,7 +90,6 @@ export default function CreatePatientForm({
 }) {
   const handleSubmit = async (data: CreatePatientInput) => {
     const patient = await createPatient(data);
-    console.log("Patient Created: " + patient);
   };
 
   return (

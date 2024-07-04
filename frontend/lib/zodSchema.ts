@@ -18,15 +18,15 @@ export const LoginSchema = z.object({
 export const CreatePatientSchema = z.object({
   firstName: z.string({ required_error: "First name is required" }).min(2),
   lastName: z.string({ required_error: "Last name is required" }).min(2),
-  birthDate: z.string().transform((arg) => new Date(arg)),
+  birthDate: z.string().transform((arg) => new Date(arg).toISOString()),
   email: z.string().max(0).or(z.string().email()),
   phone: z.string(),
   address: z.string(),
   partnerName: z.string(),
   imageURL: z.string(),
-  lmp: z.string().transform((arg) => new Date(arg)),
-  conceptionDate: z.string().transform((arg) => new Date(arg)),
-  sonoDate: z.string().transform((arg) => new Date(arg)),
+  lmp: z.string().transform((arg) => new Date(arg).toISOString()),
+  conceptionDate: z.string().transform((arg) => new Date(arg).toISOString()),
+  sonoDate: z.string().transform((arg) => new Date(arg).toISOString()),
   crl: z
     .number()
     .min(15, {
@@ -36,8 +36,8 @@ export const CreatePatientSchema = z.object({
       message: "Too high",
     })
     .default(15),
-  crlDate: z.string().transform((arg) => new Date(arg)),
-  edd: z.string().transform((arg) => new Date(arg)),
+  crlDate: z.string().transform((arg) => new Date(arg).toISOString()),
+  edd: z.string().transform((arg) => new Date(arg).toISOString()),
   rhFactor: z.string(),
   delivered: z
     .string()
@@ -45,6 +45,6 @@ export const CreatePatientSchema = z.object({
       message: "Value must be a boolean",
     })
     .transform((value) => value === "true"),
-  deliveryDate: z.string().transform((arg) => new Date(arg)),
+  deliveryDate: z.string().transform((arg) => new Date(arg).toISOString()),
   midwifeId: z.number(),
 });

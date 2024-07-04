@@ -49,6 +49,12 @@ export async function Login(
   return res.data.token;
 }
 
+export async function Logout() {
+  cookies().delete("token");
+  cookies().delete("profileData");
+  redirect("/auth");
+}
+
 export async function GetProfile(token: string): Promise<Midwife> {
   const url = `${process.env.BACKEND_URL}/api/auth/profile`;
   const res = await axios.get(url, {

@@ -11,6 +11,7 @@ import {
 import axios from "axios";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 
 export async function SignUp(
   signUpInput: AuthMidwifeSignUpInput
@@ -117,7 +118,9 @@ export async function UpdatePatient(patient: CreatePatientInput, id: number) {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  if (res.status !== 201) {
+  if (res.status !== 200) {
     throw new Error(res.data.error);
   }
+  revalidatePath("/dashboard");
+  redirect("/dashboard");
 }

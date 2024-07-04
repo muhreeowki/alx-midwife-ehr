@@ -43,6 +43,16 @@ func MidwifeSignupController(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	// Generate a JWT token
+	generateToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"midwife_id": midwife.ID,
+		"expires_at": time.Now().Add(time.Hour * 24).Unix(),
+	})
+	token, err := generateToken.SignedString([]byte(os.Getenv("JWT_SECRET")))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 	midwifeData := models.AuthMidwifeOutput{
 		ID:        midwife.ID,
 		Email:     midwife.Email,
@@ -50,7 +60,7 @@ func MidwifeSignupController(c *gin.Context) {
 		LastName:  midwife.LastName,
 	}
 	// Return the created patient record in the response
-	c.JSON(http.StatusCreated, gin.H{"midwife": midwifeData})
+	c.JSON(http.StatusCreated, gin.H{"midwife": midwifeData, "token": token})
 }
 
 /* MidwifeLoginController is a Gin controller that handles the login endpoint for midwives. */

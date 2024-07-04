@@ -29,7 +29,7 @@ import { UseFormReturn } from "react-hook-form";
 import { GetProfile, Login } from "@/app/serverActions";
 
 import useAuthContext from "@/hooks/useAuthContext";
-import { User } from "@/context/authContext";
+import { Midwife } from "@/lib/models";
 import z from "zod";
 import { LoginSchema } from "@/lib/zodSchema";
 import { useRouter } from "next/navigation";
@@ -54,34 +54,25 @@ const LoginForm = ({
   const handleLoginSubmit = async (data: z.infer<typeof LoginSchema>) => {
     try {
       // Login user
-      const token: string | undefined = await Login({
+      const token = await Login({
         email: data.email,
         password: data.password,
       });
       if (!token) {
-        console.error("Login failed");
-        return;
+        throw new Error("Failed to login");
       }
-      // Get use info
-      const profileRes: {
-        id: string;
-        email: string;
-        first_name: string;
-        last_name: string;
-        token: string;
-      } = await GetProfile(token);
-      // Store user info in context
-      const userData: User = {
-        id: profileRes.id,
-        email: profileRes.email,
-        firstName: profileRes.first_name,
-        lastName: profileRes.last_name,
-        token,
-      };
-      login(userData);
+      // Get use info and store in context
+      const midwifeData = await GetProfile(token);
+      if (!midwifeData) {
+        throw new Error("Failed to get user data");
+      }
+      midwifeData.token = token;
+      login(midwifeData);
       // Redirect to dashboard
-      router.push("/");
-    } catch (error) {}
+      router.push("/dashboard");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

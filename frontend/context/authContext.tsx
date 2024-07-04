@@ -1,17 +1,10 @@
 "use client";
 import * as React from "react";
-
-export type User = {
-  id: string;
-  firstName: string;
-  lastName: string;
-  token: string;
-  email: string;
-};
+import { Midwife } from "@/lib/models";
 
 export interface AuthContextProps {
-  user: User | null;
-  login: (user: User) => void;
+  user: Midwife | null;
+  login: (user: Midwife) => void;
   logout: () => void;
 }
 
@@ -22,9 +15,9 @@ const AuthContext = React.createContext<AuthContextProps>({
 });
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = React.useState<User | null>(null);
+  const [user, setUser] = React.useState<Midwife | null>(null);
 
-  const login = (user: User) => {
+  const login = (user: Midwife) => {
     setUser(user);
   };
 

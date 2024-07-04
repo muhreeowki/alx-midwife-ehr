@@ -67,39 +67,7 @@ import useAuthContext from "@/hooks/useAuthContext";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { getPatients } from "@/app/serverActions";
-
-export type Patient = {
-  id: number;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
-
-  // Patient's personal details
-  firstName: string;
-  lastName: string;
-  birthDate: string | null;
-  email: string | null;
-  phone: string | null;
-  address: string | null;
-  partnerName: string | null;
-  imageURL: string | null;
-
-  // Patients' medical details
-  lmp: string | null; // Last Menstrual Period
-  conceptionDate: string | null; // Date of conception
-  sonoDate: string | null; // Date of sonogram
-  crl: number | null; // Crown Rump Length
-  crlDate: string | null; // Date of CRL
-  edd: string | null; // Estimated Due Date
-  rhFactor: string | null; // Rh Factor
-
-  // Delivery details
-  delivered: boolean; // Has the patient delivered
-  deliveryDate: string | null; // Date of delivery
-
-  // Midwife details
-  midwifeId: number;
-};
+import { Patient } from "@/lib/models";
 
 export default async function Dashboard() {
   const data = cookies().get("token");
@@ -346,12 +314,14 @@ export default async function Dashboard() {
                     Export
                   </span>
                 </Button>
-                <Button size="sm" className="h-8 gap-1">
-                  <PlusCircle className="h-3.5 w-3.5" />
-                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                    Add Product
-                  </span>
-                </Button>
+                <Link href={"/dashboard/create"}>
+                  <Button className="h-8 gap-1">
+                    <PlusCircle className="h-3.5 w-3.5" />
+                    <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                      Add Client
+                    </span>
+                  </Button>
+                </Link>
               </div>
             </div>
             <TabsContent value="all">
@@ -363,75 +333,93 @@ export default async function Dashboard() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="hidden w-[100px] sm:table-cell">
-                          <span className="sr-only">Image</span>
-                        </TableHead>
-                        <TableHead>Name</TableHead>
-                        <TableHead className="hidden md:table-cell">
-                          EDD
-                        </TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>
-                          <span className="sr-only">Actions</span>
-                        </TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {patients.map((patient) => (
-                        <TableRow key={patient.id}>
-                          <TableCell className="hidden sm:table-cell">
-                            <Image
-                              alt="Product image"
-                              className="aspect-square rounded-md object-cover"
-                              height="64"
-                              src="/placeholder.svg"
-                              width="64"
-                            />
-                          </TableCell>
-                          <TableCell className="font-medium">
-                            {patient.firstName} {patient.lastName}
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            {patient.edd?.split("T")[0]}
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant="secondary">
-                              {patient.delivered ? "Active" : "Inactive"}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button
-                                  aria-haspopup="true"
-                                  size="icon"
-                                  variant="ghost"
-                                >
-                                  <MoreHorizontal className="h-4 w-4" />
-                                  <span className="sr-only">Toggle menu</span>
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem>Edit</DropdownMenuItem>
-                                <DropdownMenuItem>Delete</DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </TableCell>
+                  {patients.length !== 0 ? (
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="hidden w-[100px] sm:table-cell">
+                            <span className="sr-only">Image</span>
+                          </TableHead>
+                          <TableHead>Name</TableHead>
+                          <TableHead className="hidden md:table-cell">
+                            EDD
+                          </TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>
+                            <span className="sr-only">Actions</span>
+                          </TableHead>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                      </TableHeader>
+                      <TableBody>
+                        {patients.map((patient) => (
+                          <TableRow key={patient.id}>
+                            <TableCell className="hidden sm:table-cell">
+                              <Image
+                                alt="Product image"
+                                className="aspect-square rounded-md object-cover"
+                                height="64"
+                                src="/placeholder.svg"
+                                width="64"
+                              />
+                            </TableCell>
+                            <TableCell className="font-medium">
+                              {patient.firstName} {patient.lastName}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {patient.edd?.split("T")[0]}
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant="secondary">
+                                {patient.delivered ? "Active" : "Inactive"}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button
+                                    aria-haspopup="true"
+                                    size="icon"
+                                    variant="ghost"
+                                  >
+                                    <MoreHorizontal className="h-4 w-4" />
+                                    <span className="sr-only">Toggle menu</span>
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                  <DropdownMenuItem>Edit</DropdownMenuItem>
+                                  <DropdownMenuItem>Delete</DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center gap-4 p-8">
+                      <p className="text-lg text-center">
+                        Create a new client to get started.
+                      </p>
+                      <Link href={"/dashboard/create"}>
+                        <Button className="h-8 gap-1">
+                          <PlusCircle className="h-3.5 w-3.5" />
+                          <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                            Add Client
+                          </span>
+                        </Button>
+                      </Link>
+                    </div>
+                  )}
                 </CardContent>
-                <CardFooter>
-                  <div className="text-xs text-muted-foreground">
-                    Showing <strong>1-10</strong> of <strong>32</strong>{" "}
-                    products
-                  </div>
-                </CardFooter>
+                {patients.length !== 0 && (
+                  <CardFooter>
+                    <div className="text-xs text-muted-foreground">
+                      Showing <strong>1-10</strong> of <strong>32</strong>{" "}
+                      products
+                    </div>
+                  </CardFooter>
+                )}
               </Card>
             </TabsContent>
           </Tabs>

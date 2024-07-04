@@ -26,30 +26,22 @@ import { UseFormReturn } from "react-hook-form";
 import z from "zod";
 import { SignUpSchema } from "@/lib/zodSchema";
 import { SignUp } from "@/app/serverActions";
+import { AuthMidwifeSignUpInput } from "@/lib/models";
+import { redirect } from "next/navigation";
 
 const SignUpForm = ({
   form,
   setAuthType,
 }: {
-  form: UseFormReturn<
-    {
-      first_name: string;
-      last_name: string;
-      email: string;
-      password: string;
-    },
-    any,
-    undefined
-  >;
+  form: UseFormReturn<AuthMidwifeSignUpInput, any, undefined>;
   setAuthType: React.Dispatch<React.SetStateAction<"signUp" | "login">>;
 }) => {
   const handleSubmit = async (data: z.infer<typeof SignUpSchema>) => {
-    const res = await SignUp({
-      email: data.email,
-      password: data.password,
-      first_name: data.first_name,
-      last_name: data.last_name,
-    });
+    try {
+      await SignUp(data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -72,7 +64,7 @@ const SignUpForm = ({
                 <div className="grid gap-2">
                   <FormField
                     control={form.control}
-                    name="first_name"
+                    name="firstName"
                     render={({ field, fieldState, formState }) => (
                       <FormItem>
                         <FormLabel>First name</FormLabel>
@@ -87,7 +79,7 @@ const SignUpForm = ({
                 <div className="grid gap-2">
                   <FormField
                     control={form.control}
-                    name="last_name"
+                    name="lastName"
                     render={({ field, fieldState, formState }) => (
                       <FormItem>
                         <FormLabel>Last Name</FormLabel>

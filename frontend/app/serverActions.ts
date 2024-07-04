@@ -1,71 +1,75 @@
 "use server";
 
-import { User } from "@/context/authContext";
+import {
+  AuthMidwifeLoginInput,
+  AuthMidwifeOutput,
+  AuthMidwifeSignUpInput,
+  Midwife,
+  Patient,
+} from "@/lib/models";
 import axios from "axios";
-import exp from "constants";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
-export async function SignUp(data: {
-  first_name: string;
-  last_name: string;
-  email: string;
-  password: string;
-}) {
+export async function SignUp(
+  signUpInput: AuthMidwifeSignUpInput
+): Promise<AuthMidwifeOutput> {
   const url = `${process.env.BACKEND_URL}/api/auth/signup`;
-  const res = await axios.post(url, data);
+  const res = await axios.post(url, signUpInput);
   if (res.status !== 201) {
-    return undefined;
-  } else {
-    if (res) {
-      redirect("/");
-    }
+    throw new Error(res.data.error);
   }
+  cookies().set("token", res.data.token, {
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+    httpOnly: true,
+  });
+  cookies().set("profileData", JSON.stringify(res.data.midwife as Midwife), {
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+    httpOnly: true,
+  });
+  redirect("/dashboard");
+  return res.data.midwife;
 }
 
 // TODO: Store token in server
-export async function Login(data: { email: string; password: string }) {
+export async function Login(
+  loginInput: AuthMidwifeLoginInput
+): Promise<string | undefined> {
   const url = `${process.env.BACKEND_URL}/api/auth/login`;
-  const res = await axios.post(url, data);
-  if (res.status === 200) {
-    cookies().set("token", res.data.token, {
-      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
-      httpOnly: true,
-    });
-    return res.data.token;
+  const res = await axios.post(url, loginInput);
+  if (res.status !== 200) {
+    throw new Error(res.data.error);
   }
-  return undefined;
+  cookies().set("token", res.data.token, {
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+    httpOnly: true,
+  });
+  return res.data.token;
 }
 
-// TODO: Store profile in server
-export async function GetProfile(token: string) {
+export async function GetProfile(token: string): Promise<Midwife> {
   const url = `${process.env.BACKEND_URL}/api/auth/profile`;
   const res = await axios.get(url, {
     headers: { Authorization: `Bearer ${token}` },
   });
-  if (res.status === 200) {
-    // TODO: Encrypt profile data
-    cookies().set("profileData", JSON.stringify(res.data.midwife as User), {
-      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
-      httpOnly: true,
-    });
-    return res.data.midwife;
+  if (res.status !== 200) {
+    throw new Error("Failed to fetch profile");
   }
-  return undefined;
+  cookies().set("profileData", JSON.stringify(res.data.midwife as Midwife), {
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+    httpOnly: true,
+  });
+  return res.data.midwife;
 }
 
-export async function getPatients(token: string) {
-  try {
-    const url = `${process.env.BACKEND_URL}/api/patients`;
-    const res = await axios.get(url, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (res.status === 200) {
-      const patients = await res.data.patients;
-      return patients;
-    }
-    return undefined;
-  } catch (error) {
-    console.error(error);
+export async function getPatients(token: string): Promise<Patient[]> {
+  const url = `${process.env.BACKEND_URL}/api/patients`;
+  const res = await axios.get(url, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (res.status !== 200) {
+    throw new Error(res.data.error);
   }
+  const patients: Patient[] = await res.data.patients;
+  return patients;
 }

@@ -7,7 +7,10 @@ import (
 )
 
 type Patient struct {
-	gorm.Model
+	ID        uint           `gorm:"primaryKey" json:"id"`
+	CreatedAt time.Time      `json:"createdAt"`
+	UpdatedAt time.Time      `json:"updatedAt"`
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 	// Patient's personal details
 	FirstName   string    `json:"firstName" gorm:"not null;"`
 	LastName    string    `json:"lastName" gorm:"not null;"`

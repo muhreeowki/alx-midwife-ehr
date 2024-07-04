@@ -10,7 +10,6 @@ import (
 	"github.com/muhreeowki/midwifery-ehr/internal/database"
 	"github.com/muhreeowki/midwifery-ehr/internal/models"
 	"golang.org/x/crypto/bcrypt"
-	"gorm.io/gorm"
 )
 
 /* MidwifeSignupController returns a gin.HandlerFunc that parses a midwife record from the request body and calls the CreateMidwife method on the database engine to create a new midwife record. */
@@ -120,7 +119,7 @@ func MidwifePatientsController(c *gin.Context) {
 	}
 	// Convert the midwifeData to a Midwife struct
 	midwife := models.Midwife{
-		Model:     gorm.Model{ID: midwifeData.(models.AuthMidwifeOutput).ID},
+		ID:        midwifeData.(models.AuthMidwifeOutput).ID,
 		FirstName: midwifeData.(models.AuthMidwifeOutput).FirstName,
 		LastName:  midwifeData.(models.AuthMidwifeOutput).LastName,
 		Email:     midwifeData.(models.AuthMidwifeOutput).Email,

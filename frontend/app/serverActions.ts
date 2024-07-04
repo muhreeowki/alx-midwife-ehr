@@ -63,7 +63,7 @@ export async function GetProfile(token: string): Promise<Midwife> {
   return res.data.midwife;
 }
 
-export async function getPatients(token: string): Promise<Patient[]> {
+export async function GetPatients(token: string): Promise<Patient[]> {
   const url = `${process.env.BACKEND_URL}/api/patients`;
   const res = await axios.get(url, {
     headers: { Authorization: `Bearer ${token}` },
@@ -75,7 +75,7 @@ export async function getPatients(token: string): Promise<Patient[]> {
   return patients;
 }
 
-export async function createPatient(patient: CreatePatientInput) {
+export async function CreatePatient(patient: CreatePatientInput) {
   const midwifeData = cookies().get("profileData")?.value;
   if (!midwifeData) {
     throw new Error("Failed to get midwife data");
@@ -94,4 +94,30 @@ export async function createPatient(patient: CreatePatientInput) {
     throw new Error(res.data.error);
   }
   redirect("/dashboard");
+}
+
+export async function UpdatePatient(patient: CreatePatientInput, id: number) {
+  const midwifeData = cookies().get("profileData")?.value;
+  if (!midwifeData) {
+    throw new Error("Failed to get midwife data");
+  }
+  const midwife = JSON.parse(midwifeData);
+  const token = cookies().get("token")?.value;
+  if (!token) {
+    throw new Error("Failed to get token");
+  }
+  const url = `${process.env.BACKEND_URL}/api/patient`;
+  patient.midwifeId = midwife.id;
+  const obj = { ...patient, id };
+  console.log(obj);
+  const res = await axios.patch(
+    url,
+    { ...obj },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  if (res.status !== 201) {
+    throw new Error(res.data.error);
+  }
 }

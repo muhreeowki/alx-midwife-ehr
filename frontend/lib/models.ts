@@ -86,3 +86,28 @@ export type AuthMidwifeOutput = {
   firstName: string;
   lastName: string;
 };
+
+export const EmptyPatient: Patient = {
+  id: 0,
+  createdAt: "2022-01-12T00:00:00.000Z",
+  updatedAt: "2022-01-12T00:00:00.000Z",
+  deletedAt: "2022-01-12T00:00:00.000Z",
+  firstName: "",
+  lastName: "",
+  birthDate: "2022-01-12T00:00:00.000Z",
+  email: "",
+  phone: "",
+  address: "",
+  partnerName: "",
+  imageURL: "",
+  lmp: "2022-01-12T00:00:00.000Z",
+  conceptionDate: "2022-01-12T00:00:00.000Z",
+  sonoDate: "2022-01-12T00:00:00.000Z",
+  crl: 15,
+  crlDate: "2022-01-12T00:00:00.000Z",
+  edd: "2022-01-12T00:00:00.000Z",
+  rhFactor: "2022-01-12T00:00:00.000Z",
+  delivered: false,
+  deliveryDate: "2022-01-12T00:00:00.000Z",
+  midwifeId: 0,
+};

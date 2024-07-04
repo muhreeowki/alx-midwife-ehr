@@ -1,3 +1,5 @@
+import { Patient } from "@/lib/models";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -79,17 +81,27 @@ import { Slider } from "@/components/ui/slider";
 
 import { CreatePatientInput } from "@/lib/models";
 import { UseFormReturn } from "react-hook-form";
-import { CreatePatient } from "@/app/serverActions";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { UpdatePatient } from "@/app/serverActions";
+import { EmptyPatient } from "@/lib/models";
+import { revalidatePath } from "next/cache";
 
-export default function CreatePatientForm({
+const PatientView = ({
+  patient,
   form,
+  setSelectedPatient,
 }: {
+  patient: Patient;
   form: UseFormReturn<CreatePatientInput, any, undefined>;
-}) {
+  setSelectedPatient: React.Dispatch<React.SetStateAction<Patient>>;
+}) => {
   const handleSubmit = async (data: CreatePatientInput) => {
-    const patient = await CreatePatient(data);
+    try {
+      console.log(patient);
+      await UpdatePatient(data, patient.id);
+      console.log("Patient updated");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -245,23 +257,22 @@ export default function CreatePatientForm({
             >
               <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
                 <div className="flex items-center gap-4">
-                  <Link href={"/dashboard"}>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="h-7 w-7"
-                      type="button"
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                      <span className="sr-only">Back</span>
-                    </Button>
-                  </Link>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-7 w-7"
+                    type="button"
+                    onClick={() => setSelectedPatient(EmptyPatient)}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    <span className="sr-only">Back</span>
+                  </Button>
                   <h1 className="flex-1 shrink-0 whitespace-nowrap text-3xl font-semibold tracking-tight sm:grow-0">
-                    Add New Patient
+                    {patient.firstName} {patient.lastName}
                   </h1>
                   <div className="hidden items-center gap-2 md:ml-auto md:flex">
                     <Button size="sm" type="submit">
-                      Add Patient
+                      Save Patient
                     </Button>
                   </div>
                 </div>
@@ -279,6 +290,7 @@ export default function CreatePatientForm({
                           <div className="grid grid-cols-4 gap-3">
                             <FormField
                               control={form.control}
+                              defaultValue={patient.firstName}
                               name="firstName"
                               render={({ field }) => (
                                 <FormItem className="col-span-2">
@@ -292,6 +304,7 @@ export default function CreatePatientForm({
                             />
                             <FormField
                               control={form.control}
+                              defaultValue={patient.lastName}
                               name="lastName"
                               render={({ field }) => (
                                 <FormItem className="col-span-2">
@@ -308,6 +321,7 @@ export default function CreatePatientForm({
                           <div className="grid grid-cols-4 gap-3">
                             <FormField
                               control={form.control}
+                              defaultValue={patient.phone}
                               name="phone"
                               render={({ field }) => (
                                 <FormItem className="col-span-2">
@@ -325,6 +339,7 @@ export default function CreatePatientForm({
                             />
                             <FormField
                               control={form.control}
+                              defaultValue={patient.email}
                               name="email"
                               render={({ field }) => (
                                 <FormItem className="col-span-2">
@@ -343,6 +358,7 @@ export default function CreatePatientForm({
                           <div className="grid grid-cols-4 gap-3">
                             <FormField
                               control={form.control}
+                              defaultValue={patient.birthDate.split("T")[0]}
                               name="birthDate"
                               render={({ field }) => (
                                 <FormItem className="col-span-2">
@@ -360,6 +376,7 @@ export default function CreatePatientForm({
                             />
                             <FormField
                               control={form.control}
+                              defaultValue={patient.address}
                               name="address"
                               render={({ field }) => (
                                 <FormItem className="col-span-2">
@@ -387,6 +404,7 @@ export default function CreatePatientForm({
                           <div className="grid grid-cols-4 gap-3">
                             <FormField
                               control={form.control}
+                              defaultValue={patient.lmp.split("T")[0]}
                               name="lmp"
                               render={({ field }) => (
                                 <FormItem className="col-span-2">
@@ -400,6 +418,9 @@ export default function CreatePatientForm({
                             />
                             <FormField
                               control={form.control}
+                              defaultValue={
+                                patient.conceptionDate.split("T")[0]
+                              }
                               name="conceptionDate"
                               render={({ field }) => (
                                 <FormItem className="col-span-2">
@@ -415,6 +436,7 @@ export default function CreatePatientForm({
                           <div className="grid grid-cols-4 gap-3">
                             <FormField
                               control={form.control}
+                              defaultValue={patient.edd.split("T")[0]}
                               name="edd"
                               render={({ field }) => (
                                 <FormItem className="col-span-2">
@@ -428,6 +450,7 @@ export default function CreatePatientForm({
                             />
                             <FormField
                               control={form.control}
+                              defaultValue={patient.sonoDate.split("T")[0]}
                               name="sonoDate"
                               render={({ field }) => (
                                 <FormItem className="col-span-2">
@@ -443,6 +466,7 @@ export default function CreatePatientForm({
                           <div className="grid grid-cols-4 gap-3">
                             <FormField
                               control={form.control}
+                              defaultValue={patient.crl}
                               name="crl"
                               render={({ field }) => (
                                 <FormItem className="col-span-2">
@@ -451,7 +475,7 @@ export default function CreatePatientForm({
                                     <div className="grid grid-cols-12 gap-3">
                                       <Slider
                                         className="col-span-9"
-                                        defaultValue={[field.value]}
+                                        defaultValue={[patient.crl]}
                                         max={95}
                                         min={15}
                                         step={1}
@@ -460,7 +484,7 @@ export default function CreatePatientForm({
                                         }}
                                       />
                                       <h4 className="text-sm font-medium tracking-tight">
-                                        {field.value}mm
+                                        {patient.crl}mm
                                       </h4>
                                     </div>
                                   </FormControl>
@@ -470,6 +494,7 @@ export default function CreatePatientForm({
                             />
                             <FormField
                               control={form.control}
+                              defaultValue={patient.crlDate.split("T")[0]}
                               name="crlDate"
                               render={({ field }) => (
                                 <FormItem className="col-span-2">
@@ -500,12 +525,18 @@ export default function CreatePatientForm({
                           <div className="grid gap-3">
                             <FormField
                               control={form.control}
+                              defaultValue={patient.delivered}
                               name="delivered"
                               render={({ field }) => (
                                 <FormItem className="col-span-2">
                                   <FormLabel>Status</FormLabel>
                                   <FormControl>
-                                    <Select onValueChange={field.onChange}>
+                                    <Select
+                                      defaultValue={
+                                        patient.delivered ? "true" : "false"
+                                      }
+                                      onValueChange={field.onChange}
+                                    >
                                       <SelectTrigger
                                         id="status"
                                         aria-label="Select status"
@@ -527,28 +558,6 @@ export default function CreatePatientForm({
                               )}
                             />
                           </div>
-                          {/* {form.getValues("delivered") == "true" && (
-                            <div className="grid gap-3">
-                              <FormField
-                                control={form.control}
-                                name="deliveryDate"
-                                render={({ field }) => (
-                                  <FormItem className="col-span-2">
-                                    <FormLabel>Date of Delivery</FormLabel>
-                                    <FormControl>
-                                      <div className="grid grid-cols-12 gap-3">
-                                        <Input type="date" {...field} />
-                                        <h4 className="text-sm font-medium tracking-tight">
-                                          {field.value}mm
-                                        </h4>
-                                      </div>
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                            </div>
-                          )} */}
                         </div>
                       </CardContent>
                     </Card>
@@ -615,4 +624,6 @@ export default function CreatePatientForm({
       </div>
     </div>
   );
-}
+};
+
+export default PatientView;

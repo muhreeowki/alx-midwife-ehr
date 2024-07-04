@@ -44,7 +44,8 @@ export const CreatePatientSchema = z.object({
     .refine((value) => value === "true" || value === "false", {
       message: "Value must be a boolean",
     })
-    .transform((value) => value === "true"),
+    .transform((value) => value === "true")
+    .or(z.boolean()),
   deliveryDate: z.string().transform((arg) => new Date(arg).toISOString()),
   midwifeId: z.number(),
 });
